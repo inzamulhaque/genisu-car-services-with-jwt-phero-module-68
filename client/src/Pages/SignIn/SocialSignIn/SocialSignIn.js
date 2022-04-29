@@ -6,10 +6,13 @@ import facebookIcon from '../../../images/socialIcon/facebook.png';
 import { useSignInWithGithub, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import auth from '../../../firebase.init';
 import { useLocation, useNavigate } from 'react-router-dom';
+import useToken from '../../../hooks/useToken';
 
 const SocialSignIn = () => {
     const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
     const [signInWithGithub, gitHunUser, gitHubLoading, gitHubError] = useSignInWithGithub(auth);
+
+    const [token] = useToken(user || gitHunUser);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -24,7 +27,7 @@ const SocialSignIn = () => {
     //     return <p className="text-danger">Error: {error.message}</p>
     // }
 
-    if (user || gitHunUser) {
+    if (token) {
         navigate(from, { replace: true });
     }
 

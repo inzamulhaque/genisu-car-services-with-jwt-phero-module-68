@@ -5,6 +5,7 @@ import { useCreateUserWithEmailAndPassword, useUpdateProfile } from 'react-fireb
 import auth from '../../firebase.init';
 import SocialSignIn from './SocialSignIn/SocialSignIn';
 import PageTitle from '../Shared/PageTitle/PageTitle';
+import useToken from '../../hooks/useToken';
 
 const SignUp = () => {
     const [agree, setAgree] = useState(false)
@@ -17,6 +18,8 @@ const SignUp = () => {
 
     const [updateProfile, updating, updateError] = useUpdateProfile(auth);
 
+    const [token] = useToken(user);
+
     const navigate = useNavigate();
 
     const navigateSignIn = () => {
@@ -27,9 +30,9 @@ const SignUp = () => {
         return <p>Loading</p>;
     }
 
-    // if (user) {
-    //     navigate("/signin");
-    // }
+    if (token) {
+        navigate("/signin");
+    }
 
     const handleSignUp = async (event) => {
         event.preventDefault();
@@ -44,7 +47,7 @@ const SignUp = () => {
 
         await createUserWithEmailAndPassword(email, password);
         await updateProfile({ displayName: name });
-        navigate("/signin");
+
     }
 
     return (
